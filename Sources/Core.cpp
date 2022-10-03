@@ -129,8 +129,12 @@ void Core::DoCycle()
         m_Registers.i = (m_Registers.v[ins.dst] & 0xF) * 5;
         break;
     case Instruction::Type::LD_B_V:
-        // TODO: Implement LD_B_V
+    {
+        WriteByte(m_Registers.i + 0, m_Registers.v[ins.dst] / 100);
+        WriteByte(m_Registers.i + 1, (m_Registers.v[ins.dst] / 10) % 10);
+        WriteByte(m_Registers.i + 2, m_Registers.v[ins.dst] % 10);
         break;
+    }
     case Instruction::Type::LD_I_IMM:
         m_Registers.i = ins.address;
         break;
