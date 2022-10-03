@@ -113,7 +113,7 @@ private:
 
     std::array<uint8_t, MemorySize> m_Memory;
     std::array<uint8_t, DisplayBitmapSize> m_DisplayBitmap;
-    std::array<uint8_t, DisplayWidth * DisplayHeight * 4> m_DisplayBuffer;
+    std::array<uint8_t, DisplayWidth* DisplayHeight * 4> m_DisplayBuffer;
     bool m_DisplayDirty;
     bool m_WaitingForKey;
     uint8_t  m_KeyDst;

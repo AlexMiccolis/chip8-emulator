@@ -11,7 +11,7 @@ class Application
 public:
     Application(const std::vector<uint8_t>& program)
         : m_Window(nullptr), m_Renderer(nullptr),
-        m_DisplayTexture(nullptr), 
+        m_DisplayTexture(nullptr),
         m_DisplayRect{ }, m_RegistersRect{ }, m_MemoryRect{ }
     {
         m_Window = SDL_CreateWindow("CHIP-8 Emulator",
@@ -46,12 +46,12 @@ public:
         bool quitting = false;
 
         uint64_t frequency = SDL_GetPerformanceFrequency();
-        uint64_t start     = SDL_GetPerformanceCounter();
-        double deltaTime   = 0.016;
+        uint64_t start = SDL_GetPerformanceCounter();
+        double deltaTime = 0.016;
 
         double targetSpeed = 5000;
         double targetCount = 0;
-        double delaySpeed  = 60;
+        double delaySpeed = 60;
         double delayCount = 0;
 
         while (!quitting)
@@ -91,10 +91,10 @@ public:
             }
 
             const double target = (1 / targetSpeed);
-            const double delay  = (1 / delaySpeed);
+            const double delay = (1 / delaySpeed);
 
             targetCount += deltaTime;
-            delayCount  += deltaTime;
+            delayCount += deltaTime;
             if (targetCount >= target)
             {
                 int cycles = static_cast<int>(std::round(targetCount / target));
@@ -184,13 +184,13 @@ public:
     }
 
 private:
-    SDL_Window*   m_Window;
+    SDL_Window* m_Window;
     SDL_Renderer* m_Renderer;
-    SDL_Texture*  m_DisplayTexture;
+    SDL_Texture* m_DisplayTexture;
     SDL_Rect      m_DisplayRect;
     SDL_Rect      m_RegistersRect;
     SDL_Rect      m_MemoryRect;
-    
+
     Core m_Core;
 };
 

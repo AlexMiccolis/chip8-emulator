@@ -43,7 +43,7 @@ static std::unordered_map<std::string, Keyword> s_KeyWords = {
     { "DT", Keyword::DT },
     { "ST", Keyword::ST },
     { "I",  Keyword::I },
-    
+
     { "K",  Keyword::K },
     { "F",  Keyword::F },
     { "B",  Keyword::B }
