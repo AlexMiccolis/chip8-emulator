@@ -11,14 +11,14 @@
 
 struct AssemblerState
 {
-	std::unordered_map<std::string, uint16_t> symbols;
-	std::vector<Token> tokens;
+    std::unordered_map<std::string, uint16_t> symbols;
+    std::vector<Token> tokens;
 
-	int line;
-	int address;
+    int line;
+    int address;
 
-	AssemblerState(int origin = 0)
-		: line(0), address(origin) { }
+    AssemblerState(int origin = 0)
+        : line(0), address(origin) { }
 };
 
 void AssemblerError(int line, const char* fmt, ...);
