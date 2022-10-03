@@ -45,6 +45,9 @@
     <ClInclude Include="Sources\Instruction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Disassembler.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Assembler.cpp">
       <Filter>Source Files\Assembler</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Font.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

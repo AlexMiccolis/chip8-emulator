@@ -2,7 +2,7 @@
 #include "Instruction.h"
 
 Core::Core()
-    : m_Registers{ }, m_DisplayDirty(true), m_WaitingForKey(false), m_KeyDst(0)
+    : m_Registers{ }, m_DisplayDirty(true), m_WaitingForKey(false), m_KeyDst(0), m_KeyStates(0)
 {
     std::fill_n(m_DisplayBitmap.begin(), m_DisplayBitmap.size(), 0);
     std::fill_n(m_DisplayBuffer.begin(), m_DisplayBuffer.size(), 0);

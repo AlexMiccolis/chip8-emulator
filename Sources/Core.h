@@ -26,11 +26,14 @@ public:
     bool UpdateDisplay();
     const auto& GetDisplayBuffer() { return m_DisplayBuffer; }
 
-    /** Set instruction pointer */
-    void SetIp(uint16_t address) { m_Registers.ip = address; }
+    void SetIP(uint16_t address) { m_Registers.ip = address; }
+    uint16_t GetIP() const { return m_Registers.ip; }
+    uint16_t GetSP() const { return m_Registers.sp; }
 
-    /** Get instruction pointer */
-    uint16_t GetIp(uint16_t address) const { return m_Registers.ip; }
+    uint8_t GetV(int v) const { return m_Registers.v[v]; }
+    uint16_t GetI() const { return m_Registers.i; }
+    uint8_t GetDT() const { return m_Registers.dt; }
+    uint8_t GetST() const { return m_Registers.st; }
 
     void KeyDown(uint8_t key)
     {

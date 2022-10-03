@@ -1,10 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include "Instruction.h"
 #include "Disassembler.h"
 #include "Assembler.h"
 #include "Core.h"
+#include "Font.h"
 
 class Application
 {
@@ -28,6 +30,8 @@ public:
             Core::DisplayWidth,
             Core::DisplayHeight);
 
+        m_DebugFont = std::make_unique<Font>(m_Renderer, "consola.ttf", 24);
+
         UpdateRectangles(800, 600);
 
         m_Core.LoadData(program, 0x200);
@@ -49,7 +53,7 @@ public:
         uint64_t start = SDL_GetPerformanceCounter();
         double deltaTime = 0.016;
 
-        double targetSpeed = 5000;
+        double targetSpeed = 550;
         double targetCount = 0;
         double delaySpeed = 60;
         double delayCount = 0;
@@ -170,16 +174,50 @@ public:
         SDL_RenderFillRect(m_Renderer, &rect);
     }
 
+    template <typename ...Args>
+    void DrawString(Font& font, int x, int y, const std::string& fmt, Args... args)
+    {
+        int size = std::snprintf(nullptr, 0, fmt.c_str(), args...) + 1;
+        auto buffer = std::make_unique<char[]>(size);
+        std::snprintf(buffer.get(), size, fmt.c_str(), args...);
+
+        auto text = font.DrawText(buffer.get(), SDL_Color{250, 250, 250, 255}, SDL_Color{45, 55, 70, 255});
+
+        text->rect.x = x;
+        text->rect.y = y;
+        SDL_RenderCopy(m_Renderer, text->texture, nullptr, &text->rect);
+    }
+
     void DoFrame()
     {
         SDL_SetRenderDrawColor(m_Renderer, 30, 40, 55, 255);
         SDL_RenderClear(m_Renderer);
 
-        //DrawShadedBox(m_DisplayRect);
         DrawShadedBox(m_RegistersRect);
         DrawShadedBox(m_MemoryRect);
 
         SDL_RenderCopy(m_Renderer, m_DisplayTexture, nullptr, &m_DisplayRect);
+
+        int registerX = m_RegistersRect.x + 4;
+        int registerY = m_RegistersRect.y + 4;
+        static constexpr char hexDigits[] = "0123456789ABCDEF";
+        for (int i = 0; i < 8; i++)
+        {
+            DrawString(*m_DebugFont.get(), registerX, registerY, "V%c: 0x%02X V%c: 0x%02X",
+                hexDigits[i], m_Core.GetV(i),
+                hexDigits[i + 8], m_Core.GetV(i + 8));
+            registerY += m_DebugFont->GetHeight();
+        }
+
+        registerY += m_DebugFont->GetHeight();
+        DrawString(*m_DebugFont.get(), registerX, registerY, "DT: 0x%02X ST: 0x%02X", m_Core.GetDT(), m_Core.GetST());
+        registerY += m_DebugFont->GetHeight() * 2;
+        DrawString(*m_DebugFont.get(), registerX, registerY, "I:  0x%04X", m_Core.GetI());
+        registerY += m_DebugFont->GetHeight();
+        DrawString(*m_DebugFont.get(), registerX, registerY, "IP: 0x%04X", m_Core.GetIP());
+        registerY += m_DebugFont->GetHeight();
+        DrawString(*m_DebugFont.get(), registerX, registerY, "SP: 0x%04X", m_Core.GetSP());
+
         SDL_RenderPresent(m_Renderer);
     }
 
@@ -192,6 +230,7 @@ private:
     SDL_Rect      m_MemoryRect;
 
     Core m_Core;
+    std::unique_ptr<Font> m_DebugFont;
 };
 
 int main(int argc, char** argv)
@@ -216,7 +255,7 @@ int main(int argc, char** argv)
 
     std::cout << "Assembly source: \n" << code << std::endl;
 #else
-    std::ifstream input("Roms/Trip8 Demo (2008) [Revival Studios].ch8", std::ios::binary | std::ios::in);
+    std::ifstream input("Roms/Delay Timer Test [Matthew Mikolay, 2010].ch8", std::ios::binary | std::ios::in);
     if (!input.is_open())
         return 1;
 
@@ -239,6 +278,14 @@ int main(int argc, char** argv)
     }
 
     atexit(SDL_Quit);
+
+    if (TTF_Init() < 0)
+    {
+        puts("Failed to initialize SDL2_ttf!");
+        return 1;
+    }
+
+    atexit(TTF_Quit);
 
     Application application(program);
     application.Run();
