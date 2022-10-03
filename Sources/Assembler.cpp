@@ -196,6 +196,10 @@ static int AssembleDstInstruction(
         instruction.instruction = Opcode_LD_F_dst;
         ++tokenLength;
         break;
+    case Instruction::Type::LD_B_V:
+        instruction.instruction = Opcode_LD_B_dst;
+        ++tokenLength;
+        break;
     case Instruction::Type::LD_V_K:
         instruction.instruction = Opcode_LD_dst_K;
         ++tokenLength;
@@ -470,6 +474,7 @@ static int AssembleInstruction(std::vector<uint8_t>& bytesOut, AssemblerState& s
         tokenLength = AssembleAddrInstruction(instruction, state, token, src);
         break;
     case Instruction::Type::LD_F_V:
+    case Instruction::Type::LD_B_V:
         tokenLength = AssembleDstInstruction(instruction, token, src);
         break;
     case Instruction::Type::SKP:
