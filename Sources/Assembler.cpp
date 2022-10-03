@@ -2,8 +2,6 @@
 #include "Instruction.h"
 #include "Assembler.h"
 
-extern bool TokenizeCode(std::vector<Token>& tokensOut, const std::string& str);
-
 static constexpr uint16_t Opcode_CLS = 0x00E0;
 static constexpr uint16_t Opcode_RET = 0x00EE;
 
@@ -30,6 +28,9 @@ static constexpr uint16_t Opcode_SHL_dst_src = 0x800E;
 static constexpr uint16_t Opcode_SNE_dst_src = 0x9000;
 
 static constexpr uint16_t Opcode_DRW_dst_src_nib = 0xD000;
+
+static constexpr uint16_t Opcode_SKP_dst = 0xE09E;
+static constexpr uint16_t Opcode_SKNP_dst = 0xE0A1;
 
 static constexpr uint16_t Opcode_LD_dst_DT = 0xF007;
 static constexpr uint16_t Opcode_LD_dst_K = 0xF00A;
@@ -179,6 +180,18 @@ static int AssembleDstInstruction(
     instruction.dst = vIndex;
     switch (instruction.type)
     {
+    case Instruction::Type::SHL:
+        instruction.instruction = Opcode_SHL_dst_src;
+        break;
+    case Instruction::Type::SHR:
+        instruction.instruction = Opcode_SHR_dst_src;
+        break;
+    case Instruction::Type::SKP:
+        instruction.instruction = Opcode_SKP_dst;
+        break;
+    case Instruction::Type::SKNP:
+        instruction.instruction = Opcode_SKNP_dst;
+        break;
     case Instruction::Type::LD_F_V:
         instruction.instruction = Opcode_LD_F_dst;
         ++tokenLength;
@@ -186,12 +199,6 @@ static int AssembleDstInstruction(
     case Instruction::Type::LD_V_K:
         instruction.instruction = Opcode_LD_dst_K;
         ++tokenLength;
-        break;
-    case Instruction::Type::SHL:
-        instruction.instruction = Opcode_SHL_dst_src;
-        break;
-    case Instruction::Type::SHR:
-        instruction.instruction = Opcode_SHR_dst_src;
         break;
     }
 
@@ -465,6 +472,8 @@ static int AssembleInstruction(std::vector<uint8_t>& bytesOut, AssemblerState& s
     case Instruction::Type::LD_F_V:
         tokenLength = AssembleDstInstruction(instruction, token, src);
         break;
+    case Instruction::Type::SKP:
+    case Instruction::Type::SKNP:
     case Instruction::Type::SHL:
     case Instruction::Type::SHR:
     case Instruction::Type::LD_V_K:

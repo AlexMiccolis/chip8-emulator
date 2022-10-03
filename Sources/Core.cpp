@@ -118,11 +118,12 @@ void Core::DoCycle()
             ins.byte & 0x0F);
         break;
     case Instruction::Type::SKP:
-        // TODO: Implement SKP
+        if (m_KeyStates & (1 << m_Registers.v[ins.dst]))
+            pcInc = 4;
         break;
     case Instruction::Type::SKNP:
-        // TODO: Implement SKNP
-        pcInc += 4;
+        if ((m_KeyStates & (1 << m_Registers.v[ins.dst])) == 0)
+            pcInc = 4;
         break;
     case Instruction::Type::LD_F_V:
         m_Registers.i = (m_Registers.v[ins.dst] & 0xF) * 5;
