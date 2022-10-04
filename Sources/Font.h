@@ -2,8 +2,12 @@
 
 #include <memory>
 #include <string>
+#include <deque>
+#include <unordered_map>
 #include <SDL.h>
 #include <SDL_ttf.h>
+
+#include "LRUCache.h"
 
 class Font
 {
@@ -11,21 +15,27 @@ public:
     Font(SDL_Renderer* renderer, const std::string& path, int ptSize);
     ~Font();
 
-    struct TextBuffer
+    int GetHeight() const;
+    void DrawText(const std::string& text, int x, int y, const SDL_Color& fg, const SDL_Color& bg);
+private:
+    struct FontTexture
     {
-        TextBuffer(const SDL_Rect& _rect, SDL_Texture* _texture) 
-            : rect(_rect), texture(_texture) { }
-        ~TextBuffer();
-
-        SDL_Rect rect;
+        FontTexture(SDL_Texture* _texture)
+            : texture(_texture) { }
+        FontTexture(FontTexture&& f) noexcept
+            : texture(f.texture)
+        {
+            f.texture = nullptr;
+        }
+        ~FontTexture();
         SDL_Texture* texture;
     };
 
-    int GetHeight() const;
-    std::unique_ptr<TextBuffer> DrawText(const std::string& text, const SDL_Color& fg, const SDL_Color& bg);
-private:
     SDL_Renderer* m_Renderer;
     const std::string m_Path;
     const int m_PointSize;
     TTF_Font* m_Font;
+
+    /* This sucks in theory but works well in practice */
+    LRUCache<std::string, FontTexture> m_TextCache;
 };
