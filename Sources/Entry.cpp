@@ -30,7 +30,7 @@ public:
             Core::DisplayWidth,
             Core::DisplayHeight);
 
-        m_DebugFont = std::make_unique<Font>(m_Renderer, "consola.ttf", 24);
+        m_DebugFont = std::make_unique<Font>(m_Renderer, "C:\\Windows\\fonts\\vgafix.fon", 12);
 
         UpdateRectangles(800, 600);
 
@@ -179,13 +179,9 @@ public:
     {
         int size = std::snprintf(nullptr, 0, fmt.c_str(), args...) + 1;
         auto buffer = std::make_unique<char[]>(size);
+
         std::snprintf(buffer.get(), size, fmt.c_str(), args...);
-
-        auto text = font.DrawText(buffer.get(), SDL_Color{250, 250, 250, 255}, SDL_Color{45, 55, 70, 255});
-
-        text->rect.x = x;
-        text->rect.y = y;
-        SDL_RenderCopy(m_Renderer, text->texture, nullptr, &text->rect);
+        font.DrawText(buffer.get(), x, y, SDL_Color{250, 250, 250, 150}, SDL_Color{45, 55, 70, 255});
     }
 
     void DoFrame()
