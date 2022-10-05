@@ -145,7 +145,7 @@ public:
 
         m_MemoryRect.x = 16;
         m_MemoryRect.y = m_DisplayRect.y + m_DisplayRect.h + 16;
-        m_MemoryRect.w = m_DisplayRect.w - 4;
+        m_MemoryRect.w = m_DisplayRect.w;
         m_MemoryRect.h = (displayHeight - m_DisplayRect.h) - 48;
     }
 
@@ -164,7 +164,7 @@ public:
             rect.h + 4
         };
 
-        SDL_SetRenderDrawColor(m_Renderer, 32, 42, 58, 255);
+        SDL_SetRenderDrawColor(m_Renderer, 34, 44, 62, 255);
         SDL_RenderFillRect(m_Renderer, &darkBorder);
 
         SDL_SetRenderDrawColor(m_Renderer, 40, 50, 65, 255);
@@ -189,6 +189,7 @@ public:
         SDL_SetRenderDrawColor(m_Renderer, 30, 40, 55, 255);
         SDL_RenderClear(m_Renderer);
 
+        DrawShadedBox(m_DisplayRect);
         DrawShadedBox(m_RegistersRect);
         DrawShadedBox(m_MemoryRect);
 
